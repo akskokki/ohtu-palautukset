@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./viikko1/nhl-statistics-1/src"
+    ]
+}
