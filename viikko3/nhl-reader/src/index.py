@@ -17,6 +17,8 @@ def main():
             )
             players.append(player)
 
+    players.sort(key=lambda p: p.total, reverse=True)    
+
     for player in players:
         print(player)
 
