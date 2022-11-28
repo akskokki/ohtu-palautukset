@@ -9,12 +9,14 @@ class Ostoskori:
         return len(self.ostokset.keys())
 
     def hinta(self):
-        return 0
-        # kertoo korissa olevien ostosten yhteenlasketun hinnan
+        hinta = 0
+        for ostos in list(self.ostokset.values()):
+            hinta += ostos.hinta()
+        return hinta
 
     def lisaa_tuote(self, lisattava: Tuote):
         if not lisattava.nimi in self.ostokset:
-            self.ostokset[lisattava.nimi] = Ostos(lisattava.nimi)
+            self.ostokset[lisattava.nimi] = Ostos(lisattava)
         else:
             self.ostokset[lisattava.nimi].muuta_lukumaaraa(1)
         pass
