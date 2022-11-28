@@ -6,11 +6,14 @@ class Ostoskori:
         self.ostokset = dict()
 
     def tavaroita_korissa(self):
-        return len(self.ostokset.keys())
+        tavaroita = 0
+        for ostos in self.ostokset.values():
+            tavaroita += ostos.lukumaara()
+        return tavaroita
 
     def hinta(self):
         hinta = 0
-        for ostos in list(self.ostokset.values()):
+        for ostos in self.ostokset.values():
             hinta += ostos.hinta()
         return hinta
 
