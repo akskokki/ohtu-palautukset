@@ -3,34 +3,34 @@ from ostos import Ostos
 
 class Ostoskori:
     def __init__(self):
-        self.ostokset_dict = dict()
+        self._ostokset = dict()
 
     def tavaroita_korissa(self):
         tavaroita = 0
-        for ostos in self.ostokset_dict.values():
+        for ostos in self._ostokset.values():
             tavaroita += ostos.lukumaara()
         return tavaroita
 
     def hinta(self):
         hinta = 0
-        for ostos in self.ostokset_dict.values():
+        for ostos in self._ostokset.values():
             hinta += ostos.hinta()
         return hinta
 
     def lisaa_tuote(self, lisattava: Tuote):
-        if not lisattava.nimi in self.ostokset_dict:
-            self.ostokset_dict[lisattava.nimi] = Ostos(lisattava)
+        if not lisattava.nimi in self._ostokset:
+            self._ostokset[lisattava.nimi] = Ostos(lisattava)
         else:
-            self.ostokset_dict[lisattava.nimi].muuta_lukumaaraa(1)
+            self._ostokset[lisattava.nimi].muuta_lukumaaraa(1)
         pass
 
     def poista_tuote(self, poistettava: Tuote):
-        # poistaa tuotteen
-        pass
+        ostos = self._ostokset[poistettava.nimi]
+        ostos.muuta_lukumaaraa(-1)
 
     def tyhjenna(self):
         pass
         # tyhjentää ostoskorin
 
     def ostokset(self):
-        return list(self.ostokset_dict.values())
+        return list(self._ostokset.values())
