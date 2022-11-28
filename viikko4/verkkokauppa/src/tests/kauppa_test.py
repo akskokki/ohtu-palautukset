@@ -84,3 +84,43 @@ class TestKauppa(unittest.TestCase):
 
         self.pankki_mock.tilisiirto.assert_called_with(self.asiakas_nimi, self.viitenumero, self.asiakas_tilinumero, self.kauppa_tilinumero, 5)
  
+    def test_aloita_asionti_nollaa_edellisen_ostoksen_tiedot(self):
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(1)
+        self.kauppa.tilimaksu(self.asiakas_nimi, self.asiakas_tilinumero)
+
+        self.pankki_mock.tilisiirto.assert_called_with(ANY, ANY, ANY, ANY, 5)
+
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(2)
+        self.kauppa.tilimaksu(self.asiakas_nimi, self.asiakas_tilinumero)
+
+        self.pankki_mock.tilisiirto.assert_called_with(ANY, ANY, ANY, ANY, 3)
+
+    def test_kauppa_pyytaa_uuden_viitenumeron_joka_maksutapahtumalle(self):
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(1)
+        self.kauppa.tilimaksu(self.asiakas_nimi, self.asiakas_tilinumero)
+
+        self.assertEqual(self.viitegeneraattori_mock.uusi.call_count, 1)
+
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(1)
+        self.kauppa.tilimaksu(self.asiakas_nimi, self.asiakas_tilinumero)
+
+        self.assertEqual(self.viitegeneraattori_mock.uusi.call_count, 2)
+
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(1)
+        self.kauppa.tilimaksu(self.asiakas_nimi, self.asiakas_tilinumero)
+
+        self.assertEqual(self.viitegeneraattori_mock.uusi.call_count, 3)
+    
+    def test_tilimaksu_toimii_kun_ostoskorista_poistettu_tuote(self):
+        self.kauppa.aloita_asiointi()
+        self.kauppa.lisaa_koriin(1)
+        self.kauppa.lisaa_koriin(2)
+        self.kauppa.poista_korista(2)
+        self.kauppa.tilimaksu(self.asiakas_nimi, self.asiakas_tilinumero)
+
+        self.pankki_mock.tilisiirto.assert_called_with(self.asiakas_nimi, self.viitenumero, self.asiakas_tilinumero, self.kauppa_tilinumero, 5)
