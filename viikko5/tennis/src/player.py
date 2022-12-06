@@ -7,24 +7,16 @@ class Player:
     def set_opponent(self, opponent):
         self.opponent = opponent
     
-    def add_point_and_check_win(self):
-        if self.points >= 4:
-            return True
-
+    def add_point(self):
         if self.points == 3:
             if self.opponent.points == 4:
                 self.opponent.deuce()
-                return False
-
-            self.points += 1
-
-            if self.opponent.points == 3:
-                return False
+                return
             if self.opponent.points < 3:
-                return True
+                self.points = 5
+                return
         
         self.points += 1
-        return False
     
     def deuce(self):
         self.points = 3
@@ -38,4 +30,4 @@ class Player:
             return "Thirty"
         if self.points == 3:
             return "Forty"
-        return None
+        return ""
